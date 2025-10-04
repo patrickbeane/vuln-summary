@@ -2,7 +2,7 @@ name: Update Vulnerability Summary
 
 on:
   schedule:
-    - cron: "15 4 * * *"    # runs daily at 04:15 EST
+    - cron: "15 9 * * *"    # runs daily at 09:15 UTC
   workflow_dispatch:        # allow manual trigger
 
 jobs:
