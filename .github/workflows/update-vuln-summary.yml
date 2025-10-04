@@ -32,13 +32,13 @@ jobs:
           summary=$(jq -r '.last_scan | "Last scan: \(.date) — Critical: \(.critical) | High: \(.high) | Medium: \(.medium) | Low: \(.low) | Total: \(.total)"' trivy_sanitized.json)
           echo "SUMMARY=$summary" >> $GITHUB_ENV
 
-
       - name: Update README
         run: |
-          sed -i "/<!-- vuln-summary-start -->/,/<!-- vuln-summary-end -->/c\\<!-- vuln-summary-start -->\\
-_${SUMMARY}_\\
-<!-- vuln-summary-end -->" README.md
-
+          awk -v summary="_${SUMMARY}_" '
+            /<!-- vuln-summary-start -->/ {print; print summary; skip=1; next}
+            /<!-- vuln-summary-end -->/ {skip=0}
+            !skip
+          ' README.md > README.tmp && mv README.tmp README.md
 
       - name: Commit updated files
         run: |
@@ -47,5 +47,5 @@ _${SUMMARY}_\\
           mkdir -p data
           mv latest.json data/last-scan.json
           git add data/last-scan.json README.md
-          git commit -m "chore: update vuln summary [skip ci]" || echo "No changes to commit"
+          git commit -m "chore: refresh vuln summary (README + JSON)" || echo "No changes to commit"
           git push
