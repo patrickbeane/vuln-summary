@@ -15,22 +15,31 @@ jobs:
       - name: Fetch sanitized JSON
         run: |
           curl -sSL https://vuln.beane.me/json/trivy_sanitized.json -o trivy_sanitized.json
+          ls -lh trivy_sanitized.json
+          head -20 trivy_sanitized.json || true
 
-      - name: Extract last scan summary
-        id: summary
+      - name: Extract last scan JSON
         run: |
-          summary=$(jq -r '"Last scan: \(.date) - Critical: \(.critical) | High: \(.high) | Medium: \(.medium) | Low: \(.low) | Total: \(.total)"' trivy_sanitized.json)
+          # Save the structured last_scan block for machine readability
+          jq '.last_scan' trivy_sanitized.json > latest.json
+          cat latest.json
+
+      - name: Build summary string
+        run: |
+          # Pull fields out for a one-liner summary
+          summary=$(jq -r '.last_scan | "Last scan: \(.date) — Critical: \(.critical) | High: \(.high) | Medium: \(.medium) | Low: \(.low) | Total: \(.total)"' trivy_sanitized.json)
           echo "SUMMARY=$summary" >> $GITHUB_ENV
 
       - name: Update README
         run: |
           sed -i '/<!-- vuln-summary-start -->/,/<!-- vuln-summary-end -->/c\<!-- vuln-summary-start -->\n_${SUMMARY}_\n<!-- vuln-summary-end -->' README.md
 
-      - name: Commit updated summary
+      - name: Commit updated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p data
           mv latest.json data/last-scan.json
-          git add data/last-scan.json
+          git add data/last-scan.json README.md
           git commit -m "chore: update vuln summary [skip ci]" || echo "No changes to commit"
           git push
