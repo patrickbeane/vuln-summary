@@ -32,9 +32,13 @@ jobs:
           summary=$(jq -r '.last_scan | "Last scan: \(.date) — Critical: \(.critical) | High: \(.high) | Medium: \(.medium) | Low: \(.low) | Total: \(.total)"' trivy_sanitized.json)
           echo "SUMMARY=$summary" >> $GITHUB_ENV
 
+
       - name: Update README
         run: |
-          sed -i '/<!-- vuln-summary-start -->/,/<!-- vuln-summary-end -->/c\<!-- vuln-summary-start -->\n_${SUMMARY}_\n<!-- vuln-summary-end -->' README.md
+          sed -i "/<!-- vuln-summary-start -->/,/<!-- vuln-summary-end -->/c\\<!-- vuln-summary-start -->\\
+_${SUMMARY}_\\
+<!-- vuln-summary-end -->" README.md
+
 
       - name: Commit updated files
         run: |
