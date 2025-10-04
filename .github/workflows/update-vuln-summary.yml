@@ -8,9 +8,13 @@ on:
 jobs:
   update-summary:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write        # allow pushing back to the repo
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch sanitized JSON
         run: |
@@ -20,13 +24,11 @@ jobs:
 
       - name: Extract last scan JSON
         run: |
-          # Save the structured last_scan block for machine readability
           jq '.last_scan' trivy_sanitized.json > latest.json
           cat latest.json
 
       - name: Build summary string
         run: |
-          # Pull fields out for a one-liner summary
           summary=$(jq -r '.last_scan | "Last scan: \(.date) — Critical: \(.critical) | High: \(.high) | Medium: \(.medium) | Low: \(.low) | Total: \(.total)"' trivy_sanitized.json)
           echo "SUMMARY=$summary" >> $GITHUB_ENV
 
