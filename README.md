@@ -1,5 +1,5 @@
 ## 🔒 Vulnerability Summary
 
 <!-- vuln-summary-start -->
-_Last scan: pending..._
+_${SUMMARY}_
 <!-- vuln-summary-end -->
