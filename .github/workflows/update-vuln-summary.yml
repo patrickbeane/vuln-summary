@@ -29,8 +29,11 @@ jobs:
 
       - name: Build summary string
         run: |
-          summary=$(jq -r '.last_scan | "_Last scan: \(.date)_\\n\\nCritical: \(.critical)\\nHigh: \(.high)\\nMedium: \(.medium)\\nLow: \(.low)\\n\\nTotal: \(.total)"' trivy_sanitized.json)
-          echo "SUMMARY=$summary" >> $GITHUB_ENV
+          {
+            echo 'SUMMARY<<EOF'
+            jq -r '.last_scan | "_Last scan: \(.date)_\n\nCritical: \(.critical)\nHigh: \(.high)\nMedium: \(.medium)\nLow: \(.low)\n\nTotal: \(.total)"' trivy_sanitized.json
+            echo 'EOF'
+          } >> $GITHUB_ENV
 
       - name: Update README
         run: |
