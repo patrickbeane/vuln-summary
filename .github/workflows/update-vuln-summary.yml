@@ -30,7 +30,7 @@ jobs:
 
       - name: Build summary string
         run: |
-          jq -r '.last_scan | "_Last scan: \(.date)_\n\nCritical: \(.critical)\nHigh: \(.high)\nMedium: \(.medium)\nLow: \(.low)\n\nTotal: \(.total)"' trivy_sanitized.json > summary.txt
+          jq -r '.last_scan | "_Last scan: \(.date)_<br><br>Critical: \(.critical)<br>High: \(.high)<br>Medium: \(.medium)<br>Low: \(.low)<br><br>Total: \(.total)"' trivy_sanitized.json > summary.txt
 
       - name: Update README
         run: |
