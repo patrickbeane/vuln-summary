@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write        # allow pushing back to the repo
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -29,16 +30,17 @@ jobs:
 
       - name: Build summary string
         run: |
-          {
-            echo 'SUMMARY<<EOF'
-            jq -r '.last_scan | "_Last scan: \(.date)_\n\nCritical: \(.critical)\nHigh: \(.high)\nMedium: \(.medium)\nLow: \(.low)\n\nTotal: \(.total)"' trivy_sanitized.json
-            echo 'EOF'
-          } >> $GITHUB_ENV
+          jq -r '.last_scan | "_Last scan: \(.date)_\n\nCritical: \(.critical)\nHigh: \(.high)\nMedium: \(.medium)\nLow: \(.low)\n\nTotal: \(.total)"' trivy_sanitized.json > summary.txt
 
       - name: Update README
         run: |
-          awk -v summary="_${SUMMARY}_" '
-            /<!-- vuln-summary-start -->/ {print; print summary; skip=1; next}
+          awk '
+            /<!-- vuln-summary-start -->/ {
+              print;
+              while ((getline line < "summary.txt") > 0) print line;
+              skip=1;
+              next
+            }
             /<!-- vuln-summary-end -->/ {skip=0}
             !skip
           ' README.md > README.tmp && mv README.tmp README.md
