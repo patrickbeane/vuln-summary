@@ -1,12 +1,5 @@
 ## 🔒 Vulnerability Summary
 
 <!-- vuln-summary-start -->
-_Last scan: 2025-10-05_
-
-Critical: 0
-High: 0
-Medium: 11
-Low: 29
-
-Total: 40
+_Last scan: 2025-10-05_<br><br>Critical: 0<br>High: 0<br>Medium: 11<br>Low: 29<br><br>Total: 40
 <!-- vuln-summary-end -->
