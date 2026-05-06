@@ -1,5 +1,5 @@
 ## 🔒 Vulnerability Summary
 
 <!-- vuln-summary-start -->
-_Last scan: 2026-05-05_<br><br>Critical: 0<br>High: 0<br>Medium: 35<br>Low: 15<br><br>Total: 50
+_Last scan: 2026-05-06_<br><br>Critical: 0<br>High: 0<br>Medium: 26<br>Low: 6<br><br>Total: 32
 <!-- vuln-summary-end -->
