@@ -1,8 +1,8 @@
 {
-  "date": "2026-08-04",
+  "date": "2026-08-05",
   "low": 12,
   "medium": 31,
-  "high": 12,
+  "high": 10,
   "critical": 0,
-  "total": 55
+  "total": 53
 }
